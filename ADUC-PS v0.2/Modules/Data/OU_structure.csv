@@ -1,7 +1,0 @@
-"Name","DistinguishedName"
-"Domain Controllers","OU=Domain Controllers,DC=test,DC=test"
-"test.test","OU=test.test,DC=test,DC=test"
-"Users","OU=Users,OU=test.test,DC=test,DC=test"
-"Computers","OU=Computers,OU=test.test,DC=test,DC=test"
-"SecurityGroups","OU=SecurityGroups,OU=test.test,DC=test,DC=test"
-"Admins","OU=Admins,OU=test.test,DC=test,DC=test"
