@@ -10,18 +10,22 @@ public static extern int GetConsoleWindow();
 "@
 
 $consolePtr = [Win32.Window]::GetConsoleWindow()
-[Win32.Window]::ShowWindow($consolePtr, 0) # 0 = Hide, 5 = Show
+[Win32.Window]::ShowWindow($consolePtr, 0) #0 = Hide, 5 = Show
 
 #Export the OU structure to file, exports name and distinguished name
 $outputFile = Join-Path -Path $PSScriptRoot -ChildPath "Modules\Data\OU_structure.csv"
 Get-ADOrganizationalUnit -Filter * | Select-Object Name, DistinguishedName | Export-Csv -Path $outputFile -NoTypeInformation
+
+#Exports the security groups available, exports name and distinguished name
+$outputFile2 = Join-Path -Path $PSScriptRoot -ChildPath "Modules\Data\SecGroups.csv"
+Get-ADGroup -Filter * | Select-Object Name, DistinguishedName | Export-Csv -Path $outputFile2 -NoTypeInformation
 
 #Load the Windows Forms assembly
 Add-Type -AssemblyName System.Windows.Forms
 
 #Creates the Form(GUI-window), centers it on screen.
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "ADUC-PS v.0.1"
+$form.Text = "ADUC-PS v.0.2"
 $form.Size = New-Object System.Drawing.Size(800, 600)
 $form.StartPosition = "CenterScreen"
 
