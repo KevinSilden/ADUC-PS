@@ -4,7 +4,7 @@ Import-Module ActiveDirectory
 Add-Type -AssemblyName System.Windows.Forms
     
     $userForm = New-Object System.Windows.Forms.Form
-    $userForm.Text = "Create a user - ADUC-PS v.0.1"
+    $userForm.Text = "Create a user - ADUC-PS v.0.2"
     $userForm.Size = New-Object System.Drawing.Size(800, 600)
     $userForm.StartPosition = "CenterScreen"
 
