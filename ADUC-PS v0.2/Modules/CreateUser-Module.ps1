@@ -32,7 +32,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
     #The label and textbox for users UPN, create a .csv-file and populate the file with what's in the textbox
     $userLabel3 = New-Object System.Windows.Forms.Label
-    $userLabel3.Text = "Enter domain(login for user, not local):"
+    $userLabel3.Text = "Enter domain(after @):"
     $userLabel3.Location = New-Object System.Drawing.Point(10, 110)
     $userLabel3.AutoSize = $true
     $userForm.Controls.Add($userLabel3)
@@ -41,7 +41,7 @@ Add-Type -AssemblyName System.Windows.Forms
     $userTextBox3.Size = New-Object System.Drawing.Size(200, 20)
     $userForm.Controls.Add($userTextBox3)
 
-    $csvFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Data\domain.csv"
+    $csvFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Data\Domain.csv"
 
     # Ensure the CSV file exists and has a header
     if (-not (Test-Path $csvFilePath)) {
@@ -136,6 +136,41 @@ if (Test-Path -Path $importFile) {
     }
 }
 
+#Creates the combobox for selection of security group. Import the CSV data exported in the main script when first launched
+$importFile2 = Join-Path -Path $PSScriptRoot -ChildPath "Data\SecGroups.csv"
+
+if (Test-Path -Path $importFile2) {
+    $data = Import-Csv -Path $importFile2
+
+    if ($data) {
+        $userLabel6 = New-Object System.Windows.Forms.Label
+        $userLabel6.Text = "Select which Security Group the user is a member of"
+        $userLabel6.Location = New-Object System.Drawing.Point(10, 290)
+        $userLabel6.AutoSize = $true
+        $comboBox2 = New-Object System.Windows.Forms.ComboBox
+        $comboBox2.Location = New-Object System.Drawing.Point(10, 310)
+        $comboBox2.Size = New-Object System.Drawing.Size(200, 30)
+        $comboBox2.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+    
+        #Populate ComboBox with Name, stores DistinguishedName in a hashtable
+        $secGroupMapping = @{}
+        foreach ($item in $data) {
+            $comboBox2.Items.Add($item.Name)
+            $secGroupMapping[$item.Name] = $item.DistinguishedName
+        }
+
+        Write-Host "Populating ComboBox with the following data:"
+        foreach ($item in $data) {
+            Write-Host "Name: $($item.Name), DistinguishedName: $($item.DistinguishedName)"
+        }
+    
+        $userForm.Controls.Add($comboBox2)
+        $userForm.Controls.Add($userLabel6)
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("The CSV file is empty or does not have valid data.", "Error")
+    }
+}
+
 #Creates OK-button, pressing OK will run the input into separate variables
 $okButton = New-Object System.Windows.Forms.Button
 $okButton.Text = "Create user"
@@ -206,6 +241,17 @@ if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         Write-Host "Error: User '$SAMACCName' not found in the directory."
     }
 
-    # Confirmation
-    [System.Windows.Forms.MessageBox]::Show("User has been created and moved!")
+    #Confirmation message
+    [System.Windows.Forms.MessageBox]::Show("User has been created, moved to the OU and added to the Security Group!")
+
+    #Add the user to the chosen Security Group after creation and moving it
+    $selectedSecurityGroup = $secGroupMapping[$comboBox2.SelectedItem]
+    if ($selectedSecurityGroup) {
+        Add-ADGroupMember -Identity $selectedSecurityGroup -Members $SAMACCName
+        Write-Host "User $SAMACCName has been added to the group $selectedSecurityGroup"
+    } else {
+        Write-Host "Error: No valid security group selected."
+}
+
+
 }
