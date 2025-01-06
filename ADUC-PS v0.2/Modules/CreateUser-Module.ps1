@@ -30,7 +30,7 @@ Add-Type -AssemblyName System.Windows.Forms
     $userTextBox2.Size = New-Object System.Drawing.Size(200, 20)
     $userForm.Controls.Add($userTextBox2)
 
-    #The label and textbox for users UPN
+    #The label and textbox for users UPN, create a .csv-file and populate the file with what's in the textbox
     $userLabel3 = New-Object System.Windows.Forms.Label
     $userLabel3.Text = "Enter domain(login for user, not local):"
     $userLabel3.Location = New-Object System.Drawing.Point(10, 110)
@@ -40,6 +40,31 @@ Add-Type -AssemblyName System.Windows.Forms
     $userTextBox3.Location = New-Object System.Drawing.Point(10, 130)
     $userTextBox3.Size = New-Object System.Drawing.Size(200, 20)
     $userForm.Controls.Add($userTextBox3)
+
+    $csvFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Data\domain.csv"
+
+    # Ensure the CSV file exists and has a header
+    if (-not (Test-Path $csvFilePath)) {
+        "UPN" | Out-File -FilePath $csvFilePath -Encoding UTF8
+    }
+
+    # Read the first existing UPN value (if any) from the CSV file
+    $currentUPN = ""
+    if ((Get-Content $csvFilePath | Measure-Object).Count -gt 1) {
+        $currentUPN = (Get-Content $csvFilePath)[1]  # Get the first line after the header
+    }
+
+    # Populate the textbox with the current UPN value, overwrite if changed
+    $userTextBox3.Text = $currentUPN  # Assign the initial value after adding the TextBox to the form
+    $userTextBox3.Add_TextChanged({
+        $upn = $userTextBox3.Text
+        "UPN" | Out-File -FilePath $csvFilePath -Encoding UTF8  # Write header
+    if ($upn -ne "") {
+        $upn | Out-File -FilePath $csvFilePath -Encoding UTF8 -Append
+        }
+    })
+
+##############################
 
     #The label and textbox for users password
     $userLabel4 = New-Object System.Windows.Forms.Label
@@ -71,19 +96,16 @@ if (Test-Path -Path $importFile) {
     $data = Import-Csv -Path $importFile
 
     if ($data) {
-        # Create a label for the ComboBox
         $userLabel6 = New-Object System.Windows.Forms.Label
         $userLabel6.Text = "Select which OU to create the user in"
         $userLabel6.Location = New-Object System.Drawing.Point(10, 250)
         $userLabel6.AutoSize = $true
-    
-        # Create the ComboBox
         $comboBox = New-Object System.Windows.Forms.ComboBox
         $comboBox.Location = New-Object System.Drawing.Point(10, 270)
         $comboBox.Size = New-Object System.Drawing.Size(200, 30)
         $comboBox.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
     
-        # Populate ComboBox with Name, stores DistinguishedName in a hashtable
+        #Populate ComboBox with Name, stores DistinguishedName in a hashtable
         $ouMapping = @{}
         foreach ($item in $data) {
             $comboBox.Items.Add($item.Name)
@@ -95,7 +117,7 @@ if (Test-Path -Path $importFile) {
             Write-Host "Name: $($item.Name), DistinguishedName: $($item.DistinguishedName)"
         }
     
-        # Event to retrieve DistinguishedName of the selected OU
+        #Retrieve DistinguishedName of the selected OU
         $comboBox.Add_SelectedIndexChanged({
             $selectedOUName = $comboBox.SelectedItem
             Write-Host "Selected OU Name: $selectedOUName"
@@ -107,7 +129,6 @@ if (Test-Path -Path $importFile) {
             }
         })
     
-        # Add the controls to the form
         $userForm.Controls.Add($comboBox)
         $userForm.Controls.Add($userLabel6)
     } else {
