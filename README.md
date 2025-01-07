@@ -10,7 +10,12 @@ When running this script:
 Stored under "Modules\Data". Files added to this repo are from a VM for testing.
 Users created will combine first and last name into a username, e.g. "kevin.silden@contoso.com". No flexibility there atm.
 
-For now, only the CreateUser-Module.ps1- and SecGroup-Module.ps1-script is working as intended. Tested on a VM running Windows Server 2022 Standard Ed.
+Modules that are now in a working state:
+- CreateUser-Module.ps1
+- SecGroup-Module.ps1-script
+- CreateComputer-Module.ps1
+
+Tested on a VM running Windows Server 2022 Standard Ed.
 The rest is just older scripts thrown in there and I haven't tested it yet.
 
 - Kevin Silden
