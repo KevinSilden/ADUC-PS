@@ -18,5 +18,3 @@ Modules that are now in a working state:
   The CSV-Module.ps1 is somewhat basic atm, needs rewriting.
 
 Tested on a VM running Windows Server 2022 Standard Ed.
-
-- Kevin Silden
