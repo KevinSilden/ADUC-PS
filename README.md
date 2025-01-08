@@ -15,7 +15,8 @@ Modules that are now in a working state:
 - SecGroup-Module.ps1-script
 - CreateComputer-Module.ps1
 
+  The CSV-Module.ps1 is somewhat basic atm, needs rewriting.
+
 Tested on a VM running Windows Server 2022 Standard Ed.
-The rest is just older scripts thrown in there and I haven't tested it yet.
 
 - Kevin Silden
