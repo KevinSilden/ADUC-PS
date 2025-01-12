@@ -224,8 +224,6 @@ if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         Write-Host "Error creating user: $_"
         return
     }
-
-    # Validate the selected OU
     if (-not $global:selectedDistinguishedName) {
         Write-Host "Error: No OU selected or '$global:selectedDistinguishedName' is null."
         return
