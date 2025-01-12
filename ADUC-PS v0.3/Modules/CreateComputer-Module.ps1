@@ -3,7 +3,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
 #Create the form and input field
 $compObjForm = New-Object System.Windows.Forms.Form
-$compObjForm.Text = "Create a Computer Object - ADUC-PS v.0.2"
+$compObjForm.Text = "Create a Computer Object - ADUC-PS v.0.3"
 $compObjForm.Size = New-Object System.Drawing.Size(800, 600)
 $compObjForm.StartPosition = "CenterScreen"
 $compObjLabel1 = New-Object System.Windows.Forms.Label
