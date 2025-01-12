@@ -21,7 +21,7 @@ Get-ADGroup -Filter * | Select-Object Name, DistinguishedName | Export-Csv -Path
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ADUC-PS v.0.2" Height="400" Width="400" WindowStartupLocation="CenterScreen"
+        Title="ADUC-PS v.0.3" Height="400" Width="400" WindowStartupLocation="CenterScreen"
         Background="Black">
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -81,4 +81,4 @@ $window.FindName("btnOpenOUFile").Add_Click({
 
 #Shows the GUI, kills powershell to clean the minimized instances
 $window.ShowDialog()
-Stop-Process -Name "powershell" -Force
+# Stop-Process -Name "powershell" -Force
