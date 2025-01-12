@@ -1,4 +1,3 @@
-#Imports the AD-module, comment/uncomment if/when nessecary:
 Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -180,20 +179,19 @@ $userForm.Controls.Add($okButton)
 $userForm.AcceptButton = $okButton
 
 if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-    # Retrieve input values
     $userInput1 = $userTextBox1.Text.Trim()
     $userInput2 = $userTextBox2.Text.Trim()
     $userInput3 = $userTextBox3.Text.Trim()
     $userUPN = "$($userInput1.ToLower()).$($userInput2.ToLower())@$($userInput3.ToLower())"
     $userInput4 = $userTextBox4.Text.Trim()
 
-    # Sanitize inputs to remove invalid characters
+    #Remove invalid characters
     $userInput1 = $userInput1 -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $userInput2 = $userInput2 -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $userUPN = $userUPN -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $SAMACCName = "$($userInput1.ToLower()).$($userInput2.ToLower())"
 
-    # Validate inputs
+    #Validate inputs
     if (-not $userInput1 -or -not $userInput2 -or -not $userInput3 -or -not $userInput4) {
         Write-Host "Error: One or more input fields are empty."
         return
@@ -203,18 +201,16 @@ if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         Write-Host "Error: Invalid UPN format: $userUPN"
         return
     }
-
-    # Secure password
     $SecurePassword = ConvertTo-SecureString $userInput4 -AsPlainText -Force
 
-    # Check for conflicts
+    #Check for conflicts
     $existingUser = Get-ADUser -Filter {SamAccountName -eq $SAMACCName -or UserPrincipalName -eq $userUPN}
     if ($existingUser) {
         Write-Host "Error: A user with the same SAM Account Name or UPN already exists."
         return
     }
 
-    # Create the AD user
+    #Create the AD user
     try {
         New-ADUser -Name "$userInput1 $userInput2" -GivenName $userInput1 -Surname $userInput2 `
             -SamAccountName $SAMACCName -UserPrincipalName $userUPN `
@@ -224,6 +220,7 @@ if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         Write-Host "Error creating user: $_"
         return
     }
+
     if (-not $global:selectedDistinguishedName) {
         Write-Host "Error: No OU selected or '$global:selectedDistinguishedName' is null."
         return
