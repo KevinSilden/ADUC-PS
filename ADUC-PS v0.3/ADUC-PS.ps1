@@ -79,6 +79,6 @@ $window.FindName("btnOpenOUFile").Add_Click({
     Start-Process -FilePath "notepad.exe" -ArgumentList $outputFileOU
 })
 
-#Shows the GUI, kills powershell to clean the minimized instances
+#Shows the GUI, kills powershell to clean up the minimized instances
 $window.ShowDialog()
 # Stop-Process -Name "powershell" -Force
