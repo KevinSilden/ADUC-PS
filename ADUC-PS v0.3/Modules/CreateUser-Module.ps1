@@ -1,10 +1,11 @@
+#Imports the AD-module, comment/uncomment if/when nessecary:
 Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
     
     $userForm = New-Object System.Windows.Forms.Form
-    $userForm.Text = "ADUC-PS v.0.3 - Create a user"
-    $userForm.Size = New-Object System.Drawing.Size(800, 600)
+    $userForm.Text = "Create a user - ADUC-PS v.0.2"
+    $userForm.Size = New-Object System.Drawing.Size(400, 400)
     $userForm.StartPosition = "CenterScreen"
 
     #The label and textbox for users first name
@@ -76,18 +77,6 @@ Add-Type -AssemblyName System.Windows.Forms
     $userTextBox4.Size = New-Object System.Drawing.Size(200, 20)
     $userForm.Controls.Add($userTextBox4)
 
-# @TO-DO: This has no use atm. add later.
-    #The label and textbox for users department.
-    $userLabel5 = New-Object System.Windows.Forms.Label
-    $userLabel5.Text = "Users department:"
-    $userLabel5.Location = New-Object System.Drawing.Point(10, 190)
-    $userLabel5.AutoSize = $true
-    $userForm.Controls.Add($userLabel5)
-    $userTextBox5 = New-Object System.Windows.Forms.TextBox
-    $userTextBox5.Location = New-Object System.Drawing.Point(10, 210)
-    $userTextBox5.Size = New-Object System.Drawing.Size(200, 20)
-    $userForm.Controls.Add($userTextBox5)
-
 #Creates the combobox for selection of OU. Import the CSV data exported in the main script when first launched
 $importFile = Join-Path -Path $PSScriptRoot -ChildPath "Data\OU_structure.csv"
 
@@ -97,10 +86,10 @@ if (Test-Path -Path $importFile) {
     if ($data) {
         $userLabel6 = New-Object System.Windows.Forms.Label
         $userLabel6.Text = "Select which OU to create the user in"
-        $userLabel6.Location = New-Object System.Drawing.Point(10, 250)
+        $userLabel6.Location = New-Object System.Drawing.Point(10, 190)
         $userLabel6.AutoSize = $true
         $comboBox = New-Object System.Windows.Forms.ComboBox
-        $comboBox.Location = New-Object System.Drawing.Point(10, 270)
+        $comboBox.Location = New-Object System.Drawing.Point(10, 210)
         $comboBox.Size = New-Object System.Drawing.Size(200, 30)
         $comboBox.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
     
@@ -144,10 +133,10 @@ if (Test-Path -Path $importFile2) {
     if ($data) {
         $userLabel6 = New-Object System.Windows.Forms.Label
         $userLabel6.Text = "Select which Security Group the user is a member of"
-        $userLabel6.Location = New-Object System.Drawing.Point(10, 290)
+        $userLabel6.Location = New-Object System.Drawing.Point(10, 230)
         $userLabel6.AutoSize = $true
         $comboBox2 = New-Object System.Windows.Forms.ComboBox
-        $comboBox2.Location = New-Object System.Drawing.Point(10, 310)
+        $comboBox2.Location = New-Object System.Drawing.Point(10, 260)
         $comboBox2.Size = New-Object System.Drawing.Size(200, 30)
         $comboBox2.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
     
@@ -173,25 +162,26 @@ if (Test-Path -Path $importFile2) {
 #Creates OK-button, pressing OK will run the input into separate variables
 $okButton = New-Object System.Windows.Forms.Button
 $okButton.Text = "Create user"
-$okButton.Location = '390,220'
+$okButton.Location = '150,300'
 $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
 $userForm.Controls.Add($okButton)
 $userForm.AcceptButton = $okButton
 
 if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+    # Retrieve input values
     $userInput1 = $userTextBox1.Text.Trim()
     $userInput2 = $userTextBox2.Text.Trim()
     $userInput3 = $userTextBox3.Text.Trim()
     $userUPN = "$($userInput1.ToLower()).$($userInput2.ToLower())@$($userInput3.ToLower())"
     $userInput4 = $userTextBox4.Text.Trim()
 
-    #Remove invalid characters
+    # Sanitize inputs to remove invalid characters
     $userInput1 = $userInput1 -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $userInput2 = $userInput2 -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $userUPN = $userUPN -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $SAMACCName = "$($userInput1.ToLower()).$($userInput2.ToLower())"
 
-    #Validate inputs
+    # Validate inputs
     if (-not $userInput1 -or -not $userInput2 -or -not $userInput3 -or -not $userInput4) {
         Write-Host "Error: One or more input fields are empty."
         return
@@ -201,16 +191,18 @@ if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         Write-Host "Error: Invalid UPN format: $userUPN"
         return
     }
+
+    # Secure password
     $SecurePassword = ConvertTo-SecureString $userInput4 -AsPlainText -Force
 
-    #Check for conflicts
+    # Check for conflicts
     $existingUser = Get-ADUser -Filter {SamAccountName -eq $SAMACCName -or UserPrincipalName -eq $userUPN}
     if ($existingUser) {
         Write-Host "Error: A user with the same SAM Account Name or UPN already exists."
         return
     }
 
-    #Create the AD user
+    # Create the AD user
     try {
         New-ADUser -Name "$userInput1 $userInput2" -GivenName $userInput1 -Surname $userInput2 `
             -SamAccountName $SAMACCName -UserPrincipalName $userUPN `
@@ -221,6 +213,7 @@ if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         return
     }
 
+    # Validate the selected OU
     if (-not $global:selectedDistinguishedName) {
         Write-Host "Error: No OU selected or '$global:selectedDistinguishedName' is null."
         return
@@ -235,6 +228,8 @@ if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
     } else {
         Write-Host "Error: User '$SAMACCName' not found in the directory."
     }
+
+    #Confirmation message
     [System.Windows.Forms.MessageBox]::Show("User has been created, moved to the OU and added to the Security Group!")
 
     #Add the user to the chosen Security Group after creation and moving it
