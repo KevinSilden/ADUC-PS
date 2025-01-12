@@ -15,3 +15,4 @@ Files are stored under "Modules\Data" in the project folder.
 Users created will combine first and last name into a username, e.g. "kevin.silden@domain.com". No flexibility there atm.
 
 Tested on a VM running Windows Server 2022 Standard Ed.
+ 
