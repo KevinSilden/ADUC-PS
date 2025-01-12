@@ -6,7 +6,7 @@ NB! Running and exiting this script will kill the powershell process on the mach
 ADUC-PS.ps1 is the script to launch, which will in turn launch the module selected using the GUI.
 When running this script:
   - Exports OU names and distinguished names into a .csv-file.
-  - Exports Security groups and stores it in a .csv-file.
+  - Exports Security groups and stores it in a .csv-file(no filter, yet)
   - Creates a .csv-file which will save what is written into the "domain"-textbox and populate it. Will overwrite if something else is written in.
 
 It will not create a .csv for creating users in bulk(for now at least)
