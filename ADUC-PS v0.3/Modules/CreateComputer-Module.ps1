@@ -1,6 +1,4 @@
-# Import the AD module
 Import-Module ActiveDirectory
-
 Add-Type -AssemblyName System.Windows.Forms
 
 #Create the form and input field
@@ -64,7 +62,7 @@ if (-not $compName -or -not $selectedOU) {
     exit
 }
 
-#Sanitize inputs to remove invalid characters and validation
+#Remove invalid characters
 $userInput1 = $compName -replace '[\\\/\[\]:;|=,+*?<>]', ''
 if (-not $userInput1) {
     Write-Host "Error: One or more input fields are empty."
