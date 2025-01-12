@@ -4,7 +4,7 @@ Import-Module ActiveDirectory
 Add-Type -AssemblyName System.Windows.Forms
     
     $userForm = New-Object System.Windows.Forms.Form
-    $userForm.Text = "Create a user - ADUC-PS v.0.2"
+    $userForm.Text = "ADUC-PS v.0.3 - Create a user"
     $userForm.Size = New-Object System.Drawing.Size(800, 600)
     $userForm.StartPosition = "CenterScreen"
 
@@ -240,8 +240,6 @@ if ($userForm.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
     } else {
         Write-Host "Error: User '$SAMACCName' not found in the directory."
     }
-
-    #Confirmation message
     [System.Windows.Forms.MessageBox]::Show("User has been created, moved to the OU and added to the Security Group!")
 
     #Add the user to the chosen Security Group after creation and moving it
