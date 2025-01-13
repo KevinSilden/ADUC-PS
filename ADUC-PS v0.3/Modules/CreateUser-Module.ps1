@@ -1,10 +1,20 @@
 #Imports the AD-module, comment/uncomment if/when nessecary:
 Import-Module ActiveDirectory
 
+#Hides the PowerShell-window
+Add-Type -Name Window -Namespace Win32 -MemberDefinition @"
+[DllImport("user32.dll")]
+public static extern bool ShowWindow(int hWnd, int nCmdShow);
+[DllImport("kernel32.dll")]
+public static extern int GetConsoleWindow();
+"@
+$consolePtr = [Win32.Window]::GetConsoleWindow()
+[Win32.Window]::ShowWindow($consolePtr, 0) # 0 = Hide, 5 = Show
+
 Add-Type -AssemblyName System.Windows.Forms
     
     $userForm = New-Object System.Windows.Forms.Form
-    $userForm.Text = "Create a user - ADUC-PS v.0.2"
+    $userForm.Text = "ADUC-PS v.0.3 - Create a user"
     $userForm.Size = New-Object System.Drawing.Size(400, 400)
     $userForm.StartPosition = "CenterScreen"
 
