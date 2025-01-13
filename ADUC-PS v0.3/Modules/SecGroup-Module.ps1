@@ -29,7 +29,7 @@ $importFile = Join-Path -Path $PSScriptRoot -ChildPath "Data\OU_structure.csv"
         </Grid.ColumnDefinitions>
 
         <!-- Title -->
-        <TextBlock Text="Create a security group" FontSize="20" FontWeight="Bold" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,10" Foreground="White"/>
+        <TextBlock Text="Create a Security Group" FontSize="20" FontWeight="Bold" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,10" Foreground="White"/>
 
         <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" Width="300">
             <!-- Label for the TextBox -->
