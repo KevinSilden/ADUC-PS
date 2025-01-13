@@ -1,5 +1,7 @@
 #Imports the AD-module, comment/uncomment if/when nessecary:
 Import-Module ActiveDirectory
+
+Add-Type -AssemblyName System.Windows.Forms
      
 $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
 $openFileDialog.Title = "Select a CSV file"
