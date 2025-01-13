@@ -1,5 +1,3 @@
-If anyone know how I can populate a text-box using a .csv-file and XML - hit me up! Stuck atm.. :(
-
 This project is me trying to recreate ADUC using PowerShell and Windows Forms, since there is no ADUC through RSAT on ARM(atm).
 
 Now a v0.3 with some XML-styling on ADUC-PS.ps1 as well as SecGroup-Module.ps1 & CreateComputer-Module.ps1.
