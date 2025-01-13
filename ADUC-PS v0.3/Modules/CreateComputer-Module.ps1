@@ -1,13 +1,23 @@
 #Import the AD module
 Import-Module ActiveDirectory
 
+#Hides the PowerShell-window
+Add-Type -Name Window -Namespace Win32 -MemberDefinition @"
+[DllImport("user32.dll")]
+public static extern bool ShowWindow(int hWnd, int nCmdShow);
+[DllImport("kernel32.dll")]
+public static extern int GetConsoleWindow();
+"@
+$consolePtr = [Win32.Window]::GetConsoleWindow()
+[Win32.Window]::ShowWindow($consolePtr, 0) # 0 = Hide, 5 = Show
+
 #CSV File Path
 $importFile = Join-Path -Path $PSScriptRoot -ChildPath "Data\OU_structure.csv"
 
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ADUC-PS v0.3 - Create a Security Group" Height="400" Width="400" WindowStartupLocation="CenterScreen"
+        Title="ADUC-PS v0.3 - Create a Computer Object" Height="400" Width="400" WindowStartupLocation="CenterScreen"
         Background="Black">
     <Grid Margin="10">
         <Grid.RowDefinitions>
