@@ -1,7 +1,15 @@
 #Imports the AD-module, comment/uncomment if/when nessecary:
 Import-Module ActiveDirectory
 
-Add-Type -AssemblyName System.Windows.Forms
+#Hides the PowerShell-window
+Add-Type -Name Window -Namespace Win32 -MemberDefinition @"
+[DllImport("user32.dll")]
+public static extern bool ShowWindow(int hWnd, int nCmdShow);
+[DllImport("kernel32.dll")]
+public static extern int GetConsoleWindow();
+"@
+$consolePtr = [Win32.Window]::GetConsoleWindow()
+[Win32.Window]::ShowWindow($consolePtr, 0) # 0 = Hide, 5 = Show
      
 $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
 $openFileDialog.Title = "Select a CSV file"
