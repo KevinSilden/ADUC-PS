@@ -81,4 +81,4 @@ $window.FindName("btnOpenOUFile").Add_Click({
 
 #Shows the GUI, kills powershell to clean up the minimized instances
 $window.ShowDialog()
-# Stop-Process -Name "powershell" -Force
+Stop-Process -Name "powershell" -Force
