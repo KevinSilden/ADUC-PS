@@ -1,6 +1,8 @@
+If anyone know how I can populate a text-box using a .csv-file and XML - hit me up! Stuck atm.. :(
+
 This project is me trying to recreate ADUC using PowerShell and Windows Forms, since there is no ADUC through RSAT on ARM(atm).
 
-Now a v0.3 with some XML-styling on ADUC-PS.ps1 as well as SecGroup-Module.ps1.
+Now a v0.3 with some XML-styling on ADUC-PS.ps1 as well as SecGroup-Module.ps1 & CreateComputer-Module.ps1.
 
 NB! Running and exiting this script will kill the powershell process on the machine when closing out of the main script.
 
@@ -16,4 +18,3 @@ Files are stored under "Modules\Data" in the project folder.
 Users created will combine first and last name into a username, e.g. "kevin.silden@domain.com". No flexibility there atm.
 
 Tested on a VM running Windows Server 2022 Standard Ed.
- 
