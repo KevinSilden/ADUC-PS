@@ -17,7 +17,7 @@ $importFile = Join-Path -Path $PSScriptRoot -ChildPath "Data\OU_structure.csv"
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ADUC-PS v0.3 - Create a Computer Object" Height="400" Width="400" WindowStartupLocation="CenterScreen"
+        Title="ADUC-PS v.0.3 - Create Computer Object" Height="400" Width="400" WindowStartupLocation="CenterScreen"
         Background="Black">
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -29,8 +29,7 @@ $importFile = Join-Path -Path $PSScriptRoot -ChildPath "Data\OU_structure.csv"
         </Grid.ColumnDefinitions>
 
         <!-- Title -->
-        <TextBlock Text="ADUC-PS v0.3 - Create a Computer Object" FontSize="20" FontWeight="Bold" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,10" Foreground="White"/>
-
+        <TextBlock Text="Create a Computer Object" FontSize="20" FontWeight="Bold" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,10" Foreground="White"/>
         <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" Width="300">
             <!-- Label for the TextBox -->
             <TextBlock Text="Enter Computer Object name:" FontSize="14" Foreground="White" Margin="0,10,0,5"/>
