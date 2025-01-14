@@ -1,6 +1,6 @@
 This project is me trying to recreate ADUC using PowerShell and Windows Forms, since there is no ADUC through RSAT on ARM(atm).
 
-Workin version is 2.0.
+Workin versions are 2.0 and 3.0
 
 NB! Running and exiting this script will kill the powershell process on the machine when closing out of the main script.
 
