@@ -1,7 +1,6 @@
 This project is me trying to recreate ADUC using PowerShell and Windows Forms, since there is no ADUC through RSAT on ARM(atm).
 
-Working versions are v0.2 and v0.3.
-v0.3 is using WPF with some XML-styling on ADUC-PS.ps1 as well as SecGroup-Module.ps1 & CreateComputer-Module.ps1.
+Workin version is 2.0.
 
 NB! Running and exiting this script will kill the powershell process on the machine when closing out of the main script.
 
