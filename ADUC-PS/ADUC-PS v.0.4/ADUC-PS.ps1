@@ -20,7 +20,7 @@ $consolePtr = [Win32.Window]::GetConsoleWindow()
 $directoryPath = "$PSScriptRoot\Data"
 
 if (-not (Test-Path $directoryPath)) {
-    mkdir $directoryPath -Name "Data"
+    mkdir -Name "Data" -Path $PSScriptRoot
 }
 
 $csvOUSelectionFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Data\OU_structure.csv"
