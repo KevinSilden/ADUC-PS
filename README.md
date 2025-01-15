@@ -7,6 +7,8 @@ ADUC-PS.ps1 is the script to launch, which will in turn launch the module select
   - Exports Security groups and stores it in a .csv-file(no filter, yet)
   - Creates a .csv-file which will save what is written into the "domain"-textbox and populate it. Will overwrite if something else is written in.
 
+    On 0.4 it filters out built-in OU's and Security Groups.
+
 It will not create a .csv for creating users in bulk(for now at least)
 
 Files are stored under "Modules\Data" in the project folder(just "Data" in v.0.4). 
