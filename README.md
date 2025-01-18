@@ -1,20 +1,10 @@
 This project is me trying to recreate ADUC using PowerShell and Windows Presentation Framework and Windows Forms - since there is no ADUC through RSAT on ARM(atm).
 
-ADUC-PS.ps1 is the script to launch, which will in turn launch the module selected using the GUI. When running this script:
+v0.6 is the newest iteration, GUI should scale according to screen size. I noticed that the titles wouldn't nessecary scale when the window is sized down to a certain scale.
+Workin versions are 0.2, 0.3, 0.4 and 0.6. Keeping the older versions in here, just for the heck of it.
 
-  - (only on v.0.4) Creates a directory for the .csv-files named "Data" in the project folder.
-  - Exports OU names and distinguished names into a .csv-file.
-  - Exports Security groups and stores it in a .csv-file(no filter, yet)
-  - Creates a .csv-file which will save what is written into the "domain"-textbox and populate it. Will overwrite if something else is written in.
+When you run the script, it will create a folder called "Data" in the project folder, which will contain .csv-files which gathers information about OU's and Security Groups.
+It will also generate a .csv-file which retains the domain name entered in through the GUI. Writing something else overwrites the value in the file.
 
-    On 0.4 it filters out built-in OU's and Security Groups.
-
-It will not create a .csv for creating users in bulk(for now at least)
-
-Files are stored under "Modules\Data" in the project folder(just "Data" in v.0.4). 
-Users created will combine first and last name into a username, e.g. "firstname.lastname@domain.com". No flexibility there atm.
-
-Workin versions are 0.2, 0.3 and 0.4. Keeping the older versions in here, just for the heck of it.
-Version 0.4 is now one single script instead - a bit smoother to use IMO. Such animation, much fancy :D
-
-NB! Running and exiting this script will kill the powershell process on the machine when closing out of the main script (not relevant on 0.4, since it's not comprised of modules).
+NB! Running and exiting v.0.2 and v.0.3 script will kill the powershell process on the machine when closing out of the main script.
+Not the case with v.0.4 and v.0.6.
