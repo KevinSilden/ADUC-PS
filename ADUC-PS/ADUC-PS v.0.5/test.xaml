@@ -1,0 +1,234 @@
+<Window x:Class="YourNamespace.MainWindow"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        
+        Title="ADUC-PS v.0.4" Height="320" Width="336" WindowStartupLocation="CenterScreen"
+        Background="Black">
+    <Grid Margin="10">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="300" x:Name="LeftColumn"/>
+        <ColumnDefinition Width="*" x:Name="RightColumn"/>
+    </Grid.ColumnDefinitions>
+
+    <!-- Title -->
+    <TextBlock Text="ADUC-PS v0.4" FontSize="20" FontWeight="Bold" Grid.Row="0" Grid.Column="0"
+               HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10" Foreground="White"/>
+
+    <!-- Left Grid -->
+    <Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300">
+        <StackPanel x:Name="ButtonsPanel">
+            <Button Name="btnCreateUser" Content="Create a User" Height="30" Margin="5"/>
+            <Button Name="btnImportCSV" Content="Import Users using .CSV" Height="30" Margin="5"/>
+            <Button Name="btnCreateSecGroup" Content="Create a Security Group" Height="30" Margin="5"/>
+            <Button Name="btnCreateComputer" Content="Create Computer Object" Height="30" Margin="5"/>
+            <TextBlock Text="silden.it" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"
+                       Margin="0,10" Foreground="White"/>
+        </StackPanel>
+    </Grid>
+
+    <!-- Right grid -->
+    <!-- Expanded Section for User creation -->
+            <Grid Grid.Row="1" Grid.Column="1" Background="Black" x:Name="createUserExpandedPanel" Visibility="Collapsed">
+        <!-- Section Title -->
+            <TextBlock Text="Create a User" FontSize="20" FontWeight="Bold" 
+                Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" 
+                Margin="0,10" Foreground="White"/>
+               
+        <!-- Defining rows -->
+            <Grid Margin="0,40,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+        <!-- "Enter users first name" label and textbox -->
+            <TextBlock Text="First Name:" FontSize="14" Foreground="White" 
+                Grid.Row="0" Margin="0,10,0,5"/>
+            <TextBox Name="txtUserFirstName" Width="280" Height="25" Background="White" 
+                Foreground="Black" BorderBrush="Gray" Grid.Row="1"/>
+
+        <!-- "Enter users last name" label and textbox -->
+            <TextBlock Text="Last name:" FontSize="14" Foreground="White" 
+                Grid.Row="2" Margin="0,10,0,5"/>
+            <TextBox Name="txtUserLastName" Width="280" Height="25" Background="White" 
+                Foreground="Black" BorderBrush="Gray" Grid.Row="3"/>
+
+        <!-- "Enter domain" label and textbox -->
+            <TextBlock Text="Domain(change if nessecary):" FontSize="14" Foreground="White" 
+                Grid.Row="4" Margin="0,10,0,5"/>
+            <TextBox Name="txtUPN" Width="280" Height="25" Background="White" 
+                Foreground="Black" BorderBrush="Gray" Grid.Row="5"/>       
+                 
+        <!-- "Enter password" label and textbox -->
+            <TextBlock Text="Users password for first logon:" FontSize="14" Foreground="White" 
+                Grid.Row="6" Margin="0,10,0,5"/>
+            <TextBox Name="txtPassword" Width="280" Height="25" Background="White" 
+                Foreground="Black" BorderBrush="Gray" Grid.Row="7"/>   
+        
+        <!-- "Users OU" label and combobox -->
+            <TextBlock Text="Choose users OU" FontSize="14" Foreground="White" 
+                Grid.Row="8" Margin="0,10,0,5"/>
+            <ComboBox Name="cbUserOU" Width="280" Background="Black" Foreground="Black" BorderBrush="Gray"
+                Grid.Row="9" Margin="0,10,0,5"/>                 
+
+        <!-- "Select security group" label and combobox -->
+            <TextBlock Text="Choose security group" FontSize="14" Foreground="White" 
+                Grid.Row="10" Margin="0,10,0,5"/>
+            <ComboBox Name="cbUserSecGroup" Width="280" Background="Black" Foreground="Black" BorderBrush="Gray"
+                Grid.Row="11" Margin="0,10,0,5"/>
+
+        <!-- &nbsp lol -->
+            <TextBlock Text=" " FontSize="14" Foreground="White" 
+                Grid.Row="12" Margin="0,10,0,5"/>
+                    
+        <!-- Create user button section -->
+            <StackPanel Grid.Row="13" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="300">
+                <Button Name="btnCreateUserAction" Content="Create user" Height="30" Margin="5"/>
+            </StackPanel>
+        </Grid>
+
+</Grid>
+
+        <!-- Expanded section for csv import-->
+            <Grid Grid.Row="1" Grid.Column="1" Background="Black" x:Name="csvImportExpandedPanel" Visibility="Collapsed">
+        <!-- Section Title -->
+            <TextBlock Text="Import user(s) from .csv" FontSize="20" FontWeight="Bold" 
+                Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Center" 
+                Margin="0,10" Foreground="White"/>
+               
+        <!-- Defining rows -->
+            <Grid Margin="0,40,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Row for Import user(s) Label -->
+                <RowDefinition Height="Auto"/> <!-- yadayada -->
+                <RowDefinition Height="Auto"/> <!-- yadayada -->
+                <RowDefinition Height="Auto"/> <!-- Text -->
+                <RowDefinition Height="Auto"/> <!-- Text -->
+                <RowDefinition Height="Auto"/> <!-- Import user(s) Button -->
+            </Grid.RowDefinitions>
+
+            <TextBlock HorizontalAlignment="Center" Text="This may or may not import users when you choose a file" FontSize="14" Foreground="White" 
+                Grid.Row="3" Margin="0,10,0,5"/>
+        
+            <TextBlock HorizontalAlignment="Center" Text="This functionality isn't complete yet" FontSize="14" Foreground="White" 
+                Grid.Row="4" Margin="0,10,0,5"/>
+
+        <!-- CSV Button Section -->
+            <StackPanel Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="300">
+                <Button Name="btnImportAction" Content="Import user(s) from .csv" Height="30" Margin="5"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+        <!-- Expanded Section for Security Group Creation -->
+            <Grid Grid.Row="1" Grid.Column="1" Background="Black" x:Name="SecGroupExpandedPanel" Visibility="Collapsed">
+        <!-- Title -->
+            <TextBlock Text="Create a Security Group" FontSize="20" FontWeight="Bold" 
+                Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" 
+                Margin="0,10" Foreground="White"/>
+               
+        <!-- Row definitions -->
+        <Grid Margin="0,40,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Row for "Enter Security Group" Label -->
+                <RowDefinition Height="Auto"/> <!-- Row for TextBox -->
+                <RowDefinition Height="Auto"/> <!-- Row for "Select OU" Label -->
+                <RowDefinition Height="Auto"/> <!-- Row for ComboBox -->
+                <RowDefinition Height="Auto"/> <!-- Row, blank space -->
+                <RowDefinition Height="Auto"/> <!-- Row for TextBox -->
+                <RowDefinition Height="Auto"/> <!-- Row for ComboBox -->
+                <RowDefinition Height="Auto"/> <!-- Row for create sec grp button -->
+            </Grid.RowDefinitions>
+
+        <!-- "Enter Security Group Name" label and texbox-->
+            <TextBlock Text="Enter Security Group name:" FontSize="14" Foreground="White" 
+                Grid.Row="0" Margin="0,10,0,5"/>
+            <TextBox Name="txtSecGroupName" Width="280" Height="25" Background="White" 
+                Foreground="Black" BorderBrush="Gray" Grid.Row="1"/>
+
+        <!-- "Select OU" label and combobox -->
+            <TextBlock Text="Select OU:" FontSize="14" Foreground="White" 
+                Grid.Row="2" Margin="0,10,0,5"/>
+            <ComboBox Name="cbSecGroupOU" Width="280" Background="White" 
+                Foreground="Black" BorderBrush="Gray" Grid.Row="3"/>
+
+        <!-- "Select group scope" text and combobox -->
+            <TextBlock Text="Select Group Scope:" FontSize="14" Foreground="Gray" Margin="0,10,0,5" Grid.Row="4"/>
+            <ComboBox Name="cbGroupScope" Width="280" Background="Black" Foreground="Black" BorderBrush="Gray" Grid.Row="5">
+                <ComboBoxItem Content="Global"/>
+                <ComboBoxItem Content="Universal"/>
+                <ComboBoxItem Content="Domain Local"/>
+            </ComboBox>
+
+        <!-- &nbsp lol -->
+            <TextBlock Text=" " FontSize="14" Foreground="White" 
+                Grid.Row="6" Margin="0,10,0,5"/>
+
+        <!-- Create security group button section -->
+            <StackPanel Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="300">
+                <Button Name="btnCreateSecGroupAction" Content="Create Security Group" Height="30" Margin="5"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+        <!-- Expanded section for Computer Object -->
+            <Grid Grid.Row="1" Grid.Column="1" Background="Black" x:Name="compObjExpandedPanel" Visibility="Collapsed">
+        <!-- Title -->
+            <TextBlock Text="Create a Computer Object" FontSize="20" FontWeight="Bold" 
+                Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" 
+                Margin="0,10" Foreground="White"/>
+               
+        <!-- Row definitions -->
+            <Grid Margin="0,40,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Row for "Enter Computer Object Name" Label -->
+                <RowDefinition Height="Auto"/> <!-- Row for TextBox -->
+                <RowDefinition Height="Auto"/> <!-- Row for "Select OU" Label -->
+                <RowDefinition Height="Auto"/> <!-- Row for blank space -->
+                <RowDefinition Height="Auto"/> <!-- Row for ComboBox -->
+            </Grid.RowDefinitions>
+
+        <!-- "Enter Computer Object Name" label and textbox -->
+            <TextBlock Text="Enter Computer Object name:" FontSize="14" Foreground="White" 
+                Grid.Row="0" Margin="0,10,0,5"/>
+            <TextBox Name="txtCompName" Width="280" Height="25" Background="White" 
+                Foreground="Black" BorderBrush="Gray" Grid.Row="1"/>
+
+        <!-- Select OU -->
+            <TextBlock Text="Select OU:" FontSize="14" Foreground="White" 
+                Grid.Row="2" Margin="0,10,0,5"/>
+            <ComboBox Name="cbCompObjOU" Width="280" Background="White" 
+                Foreground="Black" BorderBrush="Gray" Grid.Row="3"/>
+
+        <!-- &nbsp lol -->
+            <TextBlock Text=" " FontSize="14" Foreground="White" 
+                Grid.Row="5" Margin="0,10,0,5"/>
+
+        <!-- Create computer object button section -->
+            <StackPanel Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="300">
+                <Button Name="btnCreateComputerAction" Content="Create Computer Object" Height="30" Margin="5"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Grid>
+
+</Window>
+</Window>
