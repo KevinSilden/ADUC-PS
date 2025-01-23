@@ -18,4 +18,4 @@ It will also generate a .csv-file which retains the domain name entered in throu
 It'll also generate another xaml-file which holds the OU structure hierarchically, which is displayable in a new window.
 
 NB! Running and exiting v.0.2 and v.0.3 script will kill the powershell process on the machine when closing out of the main script.
-Not the case with v.0.4 and v.0.6.
+Not the case with v.0.4 and up.
