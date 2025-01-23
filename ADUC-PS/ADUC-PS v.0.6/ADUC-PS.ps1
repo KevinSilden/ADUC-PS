@@ -90,6 +90,12 @@ $topRightCompObjectTitle = $window.FindName("topRightCompObjectTitle")
 $bottomRightCompObjectPanel = $window.FindName("bottomRightCompObjectPanel")
 $cbCompObjOU = $window.FindName("cbCompObjOU")
 
+#Accessing elements - Create an Organizational Unit
+$btnCreateOrgUnit = $window.FindName("btnCreateOrgUnit")
+$topRightOrgUnitTitle = $window.FindName("topRightOrgUnitTitle")
+$bottomRightOrgUnitPanel = $window.FindName("bottomRightOrgUnitPanel")
+$cbOrgUnitOU = $window.FindName("cbOrgUnitOU")
+
 #Import OU-csv-file and check for header
 $csvOUFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Data\UPN.csv"
 if (-not (Test-Path $csvOUFilePath)) {
@@ -204,6 +210,22 @@ if (Test-Path -Path $importFile) {
     [System.Windows.MessageBox]::Show("The CSV file was not found at: $importFile", "Error")
 }
 
+#Populate combobox in Organizational Unit
+if (Test-Path -Path $importFile) {
+    $data = Import-Csv -Path $importFile
+    foreach ($item in $data) {
+        if ($item.Name) {
+            $cbOrgUnitOU.Items.Add($item.Name)
+        }
+    }
+
+    if ($cbOrgUnitOU.Items.Count -eq 0) {
+        [System.Windows.MessageBox]::Show("The CSV file does not contain valid 'Name' entries.", "Error")
+    }
+} else {
+    [System.Windows.MessageBox]::Show("The CSV file was not found at: $importFile", "Error")
+}
+
 #Function to update the font size based on window width
 function UpdateFontSize {
     $windowWidth = $window.ActualWidth
@@ -236,6 +258,8 @@ $btnCreateUser.Add_Click({
     $bottomRightSecGroupPanel.Visibility = [System.Windows.Visibility]::Collapsed
     $topRightCompObjectTitle.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Collapsed
 })
 
 #"Event listener" on btnImportCSV
@@ -248,6 +272,8 @@ $btnImportCSV.Add_Click({
     $bottomRightSecGroupPanel.Visibility = [System.Windows.Visibility]::Collapsed
     $topRightCompObjectTitle.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Collapsed
 })
 
 #"Event listener" on btnCreateSecGroup
@@ -260,6 +286,8 @@ $btnCreateSecGroup.Add_Click({
     $bottomRightSecGroupPanel.Visibility = [System.Windows.Visibility]::Visible
     $topRightCompObjectTitle.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Collapsed
 })
 
 #"Event listener" on btnCreateCompObject
@@ -272,6 +300,22 @@ $btnCreateCompObject.Add_Click({
     $bottomRightSecGroupPanel.Visibility = [System.Windows.Visibility]::Collapsed
     $topRightCompObjectTitle.Visibility = [System.Windows.Visibility]::Visible
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Visible
+    $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Collapsed
+})
+
+#"Event listener" on btnCreateOrgUnit
+$btnCreateOrgUnit.Add_Click({
+    $topRightUserTitlePanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightUserCreationPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $topRightCsvImportTitle.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightCsvImportPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $topRightSecGroupTitle.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightSecGroupPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $topRightCompObjectTitle.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Visible
+    $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Visible
 })
 
 #############################################################################################
@@ -412,6 +456,7 @@ $window.FindName("btnCreateSecGroupAction").Add_Click({
 
 })
 
+#Button that create Computer Object
 $window.FindName("btnCreateComputerAction").Add_Click({
 
     $compName = $window.FindName("txtCompName").Text
@@ -444,7 +489,39 @@ $window.FindName("btnCreateComputerAction").Add_Click({
 
 })
 
-#@TO-DO: Create Organizational Units
+#Button that creates Organizational Unit
+$window.FindName("btnCreateOrgUnitAction").Add_Click({
+
+    $orgUnitName = $window.FindName("txtOrgUnitName").Text
+    $selectedOrgUnitOU = $cbOrgUnitOU.SelectedItem
+    
+    #Check if the form inputs are filled
+    if (-not $orgUnitName -or -not $selectedOrgUnitOU) {
+        Write-Host "Error: All fields must be filled out." -ForegroundColor Red
+        exit
+    }
+    
+    #Convert the selected OU to its Distinguished Name(copy-paste from user/secgroup)
+    $selectedOrgUnitOU = $data | Where-Object { $_.Name -eq $cbOrgUnitOU.SelectedItem } | Select-Object -ExpandProperty DistinguishedName
+    
+    if (-not $selectedOrgUnitOU) {
+        Write-Host "Error: Could not resolve the selected OU to a Distinguished Name." -ForegroundColor Red
+        [System.Windows.MessageBox]::Show("Error: Could not resolve the selected OU to a Distinguished Name.")
+        exit
+    }
+    
+    #Creation of the Organizational Unit
+    try {
+        New-ADOrganizationalUnit -Name $orgUnitName -DisplayName $orgUnitName -Path $selectedOrgUnitOU
+        Write-Host "Organizational Unit '$orgUnitName' created successfully in OU '$selectedOrgUnitOU'."
+        [System.Windows.MessageBox]::Show("Organizational Unit '$orgUnitName' created successfully in OU '$selectedOrgUnitOU'.")
+    } catch {
+        Write-Host "Error creating Organizational Unit $_" -ForegroundColor Red
+        [System.Windows.MessageBox]::Show("Error creating Organizational Unit: $_")
+    }
+
+})
+
 #@TO-DO: Make .csv-import functional
 #@TO-DO: Is it even possible to add printer objects and map them..?
 
