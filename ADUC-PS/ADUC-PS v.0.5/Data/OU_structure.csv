@@ -1,5 +1,0 @@
-"Name","DistinguishedName"
-"Domain Controllers","OU=Domain Controllers,DC=silden,DC=local"
-"silden.local","OU=silden.local,DC=silden,DC=local"
-"Admins","OU=Admins,OU=silden.local,DC=silden,DC=local"
-"Servers","OU=Servers,OU=silden.local,DC=silden,DC=local"
