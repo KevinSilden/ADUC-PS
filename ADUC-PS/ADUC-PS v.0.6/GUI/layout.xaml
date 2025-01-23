@@ -32,11 +32,13 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Button Name="btnCreateUser" Content="Create a User" Margin="5" Grid.Row="0"/>
             <Button Name="btnImportCSV" Content="Import user(s) with .csv" Margin="5" Grid.Row="1"/>
             <Button Name="btnCreateSecGroup" Content="Create a Security Group" Margin="5" Grid.Row="2"/>
             <Button Name="btnCreateCompObject" Content="Create a Computer Object" Margin="5" Grid.Row="3"/>
+            <Button Name="btnCreateOrgUnit" Content="Create an Organizational Unit" Margin="5" Grid.Row="3"/>
             <TextBlock Text=" " FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"
                        Margin="0,10" Foreground="White" Grid.Row="4"/>
             <TextBlock Grid.Column="0" Text="silden.it" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"
@@ -57,12 +59,16 @@
             <TextBlock x:Name="topRightCompObjectTitle" Text="Create a Computer Object" FontWeight="Bold" Foreground="White" 
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 FontSize="24" Visibility="Collapsed"/>
+            <TextBlock x:Name="topRightOrgUnitTitle" Text="Create an Organizational Unit" FontWeight="Bold" Foreground="White" 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                FontSize="24" Visibility="Collapsed"/>
         </Grid>
 
         <!-- Bottom right panel with scaling -->
         <Grid Grid.Row="1" Grid.Column="1" Background="#131111">
             <ScrollViewer x:Name="bottomRightUserCreationPanel" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
                 <UniformGrid Columns="1" Margin="10">
+                    
                     <!-- User Creation Panel -->
                     <TextBlock Text="Users first name:" FontWeight="Bold" Foreground="White" FontSize="18" VerticalAlignment="Center"/>
                     <TextBox Name="txtUserFirstName" Margin="5" VerticalAlignment="Stretch" FontSize="18"/>
@@ -109,6 +115,16 @@
                 <ComboBox Name="cbCompObjOU" Margin="5" Grid.Row="2" BorderBrush="Black"/>
                 <Button Name="btnCreateComputerAction" Content="Create Computer Object" Margin="5"/>
             </StackPanel>
+
+                        <!-- Organizational Unit Panel -->
+            <StackPanel x:Name="bottomRightOrgUnitPanel" Visibility="Collapsed" Grid.Row="1">
+                <TextBlock Text="Organizational Units name:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <TextBox Name="txtOrgUnitName" Margin="5" FontSize="18"/>
+                <TextBlock Text="Select existing OU:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <ComboBox Name="cbOrgUnitOU" Margin="5" Grid.Row="2" BorderBrush="Black"/>
+                <Button Name="btnCreateOrgUnitAction" Content="Create Organizational Unit" Margin="5"/>
+            </StackPanel>
+
         </Grid>
     </Grid>
 </Window>
