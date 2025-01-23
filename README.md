@@ -11,7 +11,7 @@ With this tool you will be able to:
 - Create an Organizational Unit, and decide which existing OU it throw it into, including "root".
 - Show the OU structure in a window, using XAML and a treeview. Shows the existing structure hierarchically.
 
-Built-in Security Groups are filtered out, as well as built in CN's/OU's except "DC=domain,DC=local".
+Built-in Security Groups are filtered out, as well as built in CN's/OU's except "DC=domain,DC=local" when you create an Organizational Unit.
 
 When you run the script, it will create a folder called "Data" in the project folder, which will contain .csv-files with exported information about existing OU's and Security Groups, as well as a .csv which holds the domain name written in under "Create a User".
 It will also generate a .csv-file which retains the domain name entered in through the GUI. Writing something else overwrites the value in the file.
