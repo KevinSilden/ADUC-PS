@@ -1,9 +1,9 @@
 Import-Module ActiveDirectory
 
-#Needs Windows.Forms for .csv-import
+# Needs Windows.Forms for .csv-import @TO-DO ..... no good functionality atm
 Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase, System.Windows.Forms
 
-#Hides the PowerShell window
+# Hides the PowerShell window
 Add-Type -Name Window -Namespace Win32 -MemberDefinition @"
 [DllImport("user32.dll")]
 public static extern bool ShowWindow(int hWnd, int nCmdShow);
@@ -13,7 +13,7 @@ public static extern int GetConsoleWindow();
 $consolePtr = [Win32.Window]::GetConsoleWindow()
 [Win32.Window]::ShowWindow($consolePtr, 0) # 0 = Hide, 5 = Show
 
-#Creating folders for data-files, and datafiles excluding builtin OU's and built-in sec-groups.
+# Creating folders for data-files, and datafiles excluding builtin OU's and built-in sec-groups.
 $directoryPath = "$PSScriptRoot\Data"
 
 if (-not (Test-Path $directoryPath)) {
@@ -23,11 +23,11 @@ if (-not (Test-Path $directoryPath)) {
 
 $csvOUSelectionFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Data\OU_structure.csv"
 
-#Export exising OU's as well as the "root"
+# Export exising OU's as well as the "root"
 $rootDistinguishedName = (Get-ADDomain).DistinguishedName
 $domainName = ($rootDistinguishedName -replace "DC=", "") -replace ",", "."
 
-#Array for exporting both the "root" as well as other existing OU's.
+# Array for exporting both the "root" as well as other existing OU's.
 $data = @()
 
 $data += [PSCustomObject]@{
@@ -43,7 +43,7 @@ $data | Export-Csv -Path $csvOUSelectionFilePath -NoTypeInformation
 
 $csvSecGroupFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Data\SecGroups.csv"
 
-#Collection of names that are built in, excluding these from exporting.
+# Collection of names that are built in, excluding these from exporting.
 $builtinGroupNames = @(
     "Administrators", "Users", "Guests", "Domain Admins", "Enterprise Admins",
     "Schema Admins", "Cert Publishers", "Group Policy Creator Owners", 
@@ -51,7 +51,7 @@ $builtinGroupNames = @(
     "Backup Operators", "Read-Only Domain Controllers", "Pre-Windows 2000 Compatible Access"
 )
 
-#Exclude groups based on their name or distinguished name
+# Exclude groups based on their name or distinguished name
 Get-ADGroup -Filter * |
 Where-Object {
     $_.GroupCategory -eq "Security" -and # Include only security groups
@@ -62,10 +62,10 @@ Where-Object {
 Select-Object Name, DistinguishedName |
 Export-Csv -Path $csvSecGroupFilePath -NoTypeInformation
 
-#Define the path of the .xaml used for GUI
+# Define the path of the .xaml used for GUI
 $xamlFilePath = Join-Path -Path $PSScriptRoot -ChildPath "GUI\layout.xaml"
 
-#Second GUI window displaying the existing OU hierarchally
+# Second GUI window displaying the existing OU hierarchally
 $outputXamlFilePath = Join-Path -Path $PSScriptRoot -ChildPath "GUI\OU_Hierarchy.xaml"
 
 function GenerateTreeViewItems {
@@ -91,11 +91,11 @@ function GenerateTreeViewItems {
     return $treeViewItems -join "`n"
 }
 
-#Get the root distinguished name
+# Get the root distinguished name
 $rootDistinguishedName = (Get-ADDomain).DistinguishedName
 $domainName = ($rootDistinguishedName -replace "DC=", "") -replace ",", "."
 
-#Building the start of the XAML
+# Building the start of the XAML (OU treeview)
 $xamlHeader = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -110,27 +110,30 @@ $xamlFooter = @"
 </Window>
 "@
 
-#Generating items in the treeview
+# Generating items in the treeview
 $treeViewContent = "<TreeViewItem Header='$domainName (root)'>"
 $treeViewContent += GenerateTreeViewItems -ParentDN $rootDistinguishedName
 $treeViewContent += "</TreeViewItem>"
-
-#Combining the parts into the XAML-file, saving it.
 $xamlContent = $xamlHeader + $treeViewContent + $xamlFooter
 Set-Content -Path $outputXamlFilePath -Value $xamlContent -Encoding UTF8
-
 Write-Output "OU hierarchy has been exported to $outputXamlFilePath"
 
-#Load the XAML for main GUI
+# Load the XAML for main GUI
 $xamlContent = Get-Content -Path $xamlFilePath -Raw
 [xml]$xamlData = $xamlContent
 $reader = New-Object System.Xml.XmlNodeReader $xamlData
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
-#Accessing elements - ADUC-PS title
+# Accessing elements - ADUC-PS title + landing page, buttn
 $TopLeftTitlePanel = $window.FindName("TopLeftTitlePanel")
+$bottomRightLandingPagePanel = $window.FindName("bottomRightLandingPagePanel")
+$bottomRightLandingPagePanel.Visibility = [System.Windows.Visibility]::Visible
+$btnGit = $window.FindName("btnGit")
+$btnGit.Add_Click({
+    Start-Process "https://github.com/KevinSilden/ADUC-PS"
+})
 
-#Accessing elements - Create a User
+# Accessing elements - Create a User
 $btnCreateUser = $window.FindName("btnCreateUser")
 $topRightUserTitlePanel = $window.FindName("topRightUserTitlePanel")
 $bottomRightUserCreationPanel = $window.FindName("bottomRightUserCreationPanel")
@@ -140,12 +143,12 @@ $txtPassword = $window.FindName("txtPassword")
 $txtUPN = $window.FindName("txtUPN")
 $cbUserOU = $window.FindName("cbUserOU")
 
-#Accessing elements - Import user(s) from .csv
+# Accessing elements - Import user(s) from .csv
 $btnImportCSV = $window.FindName("btnImportCSV")
 $topRightCsvImportTitle = $window.FindName("topRightCsvImportTitle")
 $bottomRightCsvImportPanel = $window.FindName("bottomRightCsvImportPanel")
 
-#Accessing elements - Create a Security Group
+# Accessing elements - Create a Security Group
 $btnCreateSecGroup = $window.FindName("btnCreateSecGroup")
 $topRightSecGroupTitle = $window.FindName("topRightSecGroupTitle")
 $bottomRightSecGroupPanel = $window.FindName("bottomRightSecGroupPanel")
@@ -153,32 +156,34 @@ $cbUserSecGroup = $window.FindName("cbUserSecGroup")
 $cbSecGroupOU = $window.FindName("cbSecGroupOU")
 $cbGroupScope = $Window.FindName("cbGroupScope")
 
-#Accessing elements - Create a Computer Object
+# Accessing elements - Create a Computer Object
 $btnCreateCompObject = $window.FindName("btnCreateCompObject")
 $topRightCompObjectTitle = $window.FindName("topRightCompObjectTitle")
 $bottomRightCompObjectPanel = $window.FindName("bottomRightCompObjectPanel")
 $cbCompObjOU = $window.FindName("cbCompObjOU")
 
-#Accessing elements - Create an Organizational Unit
+# Accessing elements - Create an Organizational Unit
 $btnCreateOrgUnit = $window.FindName("btnCreateOrgUnit")
 $topRightOrgUnitTitle = $window.FindName("topRightOrgUnitTitle")
 $bottomRightOrgUnitPanel = $window.FindName("bottomRightOrgUnitPanel")
 $cbOrgUnitOU = $window.FindName("cbOrgUnitOU")
 
-#Accessing elements - Show OU structure
+# Accessing elements - Show OU structure
 $btnDisplayOUStructure = $window.FindName("btnDisplayOUStructure")
 
-#Import OU-csv-file and check for header
+# Import OU-csv-file and check for header
 $csvOUFilePath = Join-Path -Path $PSScriptRoot -ChildPath "Data\UPN.csv"
 if (-not (Test-Path $csvOUFilePath)) {
     "UPN" | Out-File -FilePath $csvOUFilePath -Encoding UTF8
 }
-#Reads the first existing UPN value (if any) from the CSV file
+
+# Reads the first existing UPN value (if any) from the CSV file
 $currentUPN = ""
 if ((Get-Content $csvOUFilePath | Measure-Object).Count -gt 1) {
-    $currentUPN = (Get-Content $csvOUFilePath)[1]  # Get the first line after the header
+    $currentUPN = (Get-Content $csvOUFilePath)[1]
 }
-#Populates the textbox with the current UPN value, overwrites if changed
+
+# Populates the textbox with the current UPN value, overwrites if changed
 $txtUPN.Text = $currentUPN
 $txtUPN.Add_TextChanged({
     $upn = $txtUPN.Text
@@ -188,7 +193,7 @@ if ($upn -ne "") {
     }
 })
 
-#Populating OU user combobox. Maps to distingquishedname.
+# Populating OU user combobox. Maps to distingquishedname.
 if (Test-Path -Path $csvOUSelectionFilePath) {
     $data = Import-Csv -Path $csvOUSelectionFilePath
         if ($data) {
@@ -201,13 +206,13 @@ if (Test-Path -Path $csvOUSelectionFilePath) {
                 foreach ($item in $data) {
                 Write-Host "Name: $($item.Name), DistinguishedName: $($item.DistinguishedName)"
             }
-            #Add SelectionChanged handler, check if null or empty
+            # Add SelectionChanged handler, check if null or empty
             $cbUserOU.Add_SelectionChanged({
             if (-not $ouMapping) {
                 Write-Host "Error: The OU mapping dictionary is null or not initialized."
             return
             }
-            #Mapping selected OU, checks if valid
+            # Mapping selected OU, checks if valid
             $selectedOUName = $cbUserOU.SelectedItem
             if ($selectedOUName -and $ouMapping.ContainsKey($selectedOUName)) {
                 $global:selectedDistinguishedName = $ouMapping[$selectedOUName]
@@ -219,7 +224,7 @@ if (Test-Path -Path $csvOUSelectionFilePath) {
     }
 }
 
-#Populating Create User Security Groups combobox. Maps to distingquishedname.
+# Populating Create User Security Groups combobox. Maps to distingquishedname.
 if (Test-Path -Path $csvSecGroupFilePath) {
     $secGroupData = Import-Csv -Path $csvSecGroupFilePath
         if ($secGroupData) {
@@ -228,7 +233,7 @@ if (Test-Path -Path $csvSecGroupFilePath) {
             $cbUserSecGroup.Items.Add($item.Name)
             $secGroupMapping[$item.Name] = $item.DistinguishedName
         }
-    # Add SelectionChanged handler for Security Group ComboBox
+
     $cbUserSecGroup.Add_SelectionChanged({
         if (-not $secGroupMapping) {
         Write-Host "Error: The Security Group mapping dictionary is null or not initialized."
@@ -249,7 +254,7 @@ if (Test-Path -Path $csvSecGroupFilePath) {
     Write-Host "Security Group CSV file not found at: $csvSecGroupFilePath"
 }
 
-#Populating combobox in create Security Group from .csv
+# Populating combobox in create Security Group from .csv
 $importFile = Join-Path -Path $PSScriptRoot -ChildPath "Data\OU_structure.csv"
 if (Test-Path -Path $importFile) {
     $data = Import-Csv -Path $importFile
@@ -266,7 +271,7 @@ if (Test-Path -Path $importFile) {
     [System.Windows.MessageBox]::Show("The CSV file was not found at: $importFile", "Error")
 }
 
-#Populating combobox in Create Computer from .csv
+# Populating combobox in Create Computer from .csv
 if (Test-Path -Path $importFile) {
     $data = Import-Csv -Path $importFile
     foreach ($item in $data) {
@@ -282,7 +287,7 @@ if (Test-Path -Path $importFile) {
     [System.Windows.MessageBox]::Show("The CSV file was not found at: $importFile", "Error")
 }
 
-#Populate combobox in Organizational Unit
+# Populate combobox in Organizational Unit
 if (Test-Path -Path $importFile) {
     $data = Import-Csv -Path $importFile
     foreach ($item in $data) {
@@ -298,7 +303,7 @@ if (Test-Path -Path $importFile) {
     [System.Windows.MessageBox]::Show("The CSV file was not found at: $importFile", "Error")
 }
 
-#Function to update the font size based on window width
+# Function to update the font size based on window width
 function UpdateFontSize {
     $windowWidth = $window.ActualWidth
     # Ensure the font size is between 12 and 48
@@ -311,16 +316,12 @@ function UpdateFontSize {
     $topRightCompObjectTitle.FontSize = $newFontSize
 }
 
-
-#Hook into the SizeChanged event to dynamically update font size
 $window.add_SizeChanged({
     UpdateFontSize
 })
-
-#Initial font size update
 UpdateFontSize
 
-#"Event listener" on btnCreateUser
+# "Event listener" on btnCreateUser
 $btnCreateUser.Add_Click({
     $topRightUserTitlePanel.Visibility = [System.Windows.Visibility]::Visible
     $bottomRightUserCreationPanel.Visibility = [System.Windows.Visibility]::Visible
@@ -332,9 +333,10 @@ $btnCreateUser.Add_Click({
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Collapsed
     $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightLandingPagePanel.Visibility = [System.Windows.Visibility]::Collapsed
 })
 
-#"Event listener" on btnImportCSV
+# "Event listener" on btnImportCSV
 $btnImportCSV.Add_Click({
     $topRightUserTitlePanel.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightUserCreationPanel.Visibility = [System.Windows.Visibility]::Collapsed
@@ -346,9 +348,10 @@ $btnImportCSV.Add_Click({
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Collapsed
     $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightLandingPagePanel.Visibility = [System.Windows.Visibility]::Collapsed
 })
 
-#"Event listener" on btnCreateSecGroup
+# "Event listener" on btnCreateSecGroup
 $btnCreateSecGroup.Add_Click({
     $topRightUserTitlePanel.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightUserCreationPanel.Visibility = [System.Windows.Visibility]::Collapsed
@@ -360,9 +363,10 @@ $btnCreateSecGroup.Add_Click({
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Collapsed
     $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightLandingPagePanel.Visibility = [System.Windows.Visibility]::Collapsed
 })
 
-#"Event listener" on btnCreateCompObject
+# "Event listener" on btnCreateCompObject
 $btnCreateCompObject.Add_Click({
     $topRightUserTitlePanel.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightUserCreationPanel.Visibility = [System.Windows.Visibility]::Collapsed
@@ -374,9 +378,10 @@ $btnCreateCompObject.Add_Click({
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Visible
     $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Collapsed
+    $bottomRightLandingPagePanel.Visibility = [System.Windows.Visibility]::Collapsed
 })
 
-#"Event listener" on btnCreateOrgUnit
+# "Event listener" on btnCreateOrgUnit
 $btnCreateOrgUnit.Add_Click({
     $topRightUserTitlePanel.Visibility = [System.Windows.Visibility]::Collapsed
     $bottomRightUserCreationPanel.Visibility = [System.Windows.Visibility]::Collapsed
@@ -388,24 +393,27 @@ $btnCreateOrgUnit.Add_Click({
     $bottomRightCompObjectPanel.Visibility = [System.Windows.Visibility]::Collapsed
     $topRightOrgUnitTitle.Visibility = [System.Windows.Visibility]::Visible
     $bottomRightOrgUnitPanel.Visibility = [System.Windows.Visibility]::Visible
+    $bottomRightLandingPagePanel.Visibility = [System.Windows.Visibility]::Collapsed
 })
 
 #############################################################################################
-#"Nested" buttons below
-#Create user button - executes loads of commands.
+# "Nested" buttons below
+#############################################################################################
+
+# Create user button - executes loads of commands.
 $window.FindName("btnCreateUserAction").Add_Click({
     $UserFirstName = $txtUserFirstName.Text.Trim()
     $UserLastName = $txtUserLastName.Text.Trim()
     $domain = $txtUPN.Text.Trim()
     $userUPN = "$($UserFirstName.ToLower()).$($UserLastName.ToLower())@$($domain.ToLower())"
 
-    #Replace non valid characters
+    # Replace non valid characters
     $UserFirstName = $UserFirstName -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $txtUserLastName = $UserLastName -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $userUPN = $userUPN -replace '[\\\/\[\]:;|=,+*?<>]', ''
     $SAMACCName = "$($UserFirstName.ToLower()).$($UserLastName.ToLower())"
 
-    #Validate the inputs
+    # Validate the inputs
     if (-not $txtUserFirstName -or -not $txtUserLastName -or -not $txtUPN -or -not $txtPassword) {
         Write-Host "Error: One or more input fields are empty."
         return
@@ -414,17 +422,17 @@ $window.FindName("btnCreateUserAction").Add_Click({
         Write-Host "Error: Invalid UPN format: $userUPN"
         return
     }
-    #I have no clue why it went here, but hey, if it ain't broke don't fix it
+
     $SecurePassword = ConvertTo-SecureString $txtPassword -AsPlainText -Force
 
-    #Checks whether the user already exists
+    # Checks whether the user already exists
     $existingUser = Get-ADUser -Filter {SamAccountName -eq $SAMACCName -or UserPrincipalName -eq $userUPN}
     if ($existingUser) {
         Write-Host "Error: A user with the same SAM Account Name or UPN already exists."
         return
     }
 
-    #Creates the AD user
+    # Creates the AD user
     try {
         New-ADUser -Name "$UserFirstName $UserLastName" -GivenName $UserFirstName -Surname $UserLastName `
             -SamAccountName $SAMACCName -UserPrincipalName $userUPN `
@@ -435,13 +443,13 @@ $window.FindName("btnCreateUserAction").Add_Click({
         return
     }
 
-    #Validate the selected OU
+    # Validate the selected OU
     if (-not $global:selectedDistinguishedName) {
         Write-Host "Error: No OU selected or '$global:selectedDistinguishedName' is null."
         return
     }
 
-    #Move the user to the selected OU
+    # Move the user to the selected OU
     $User = Get-ADUser -Filter {SamAccountName -eq $SAMACCName}
     if ($User) {
         Write-Host "User found: $($User.DistinguishedName)"
@@ -450,11 +458,9 @@ $window.FindName("btnCreateUserAction").Add_Click({
     } else {
         Write-Host "Error: User '$SAMACCName' not found in the directory."
     }
-
-    #Confirmation message
     [System.Windows.Forms.MessageBox]::Show("User has been created, moved to the OU and added to the Security Group!")
 
-    #Add the user to the chosen Security Group after creation and moving it
+    # Add the user to the chosen Security Group after creation and moving it
     $selectedSecurityGroup = $secGroupMapping[$cbUserSecGroup.SelectedItem]
     if ($selectedSecurityGroup) {
         Add-ADGroupMember -Identity $selectedSecurityGroup -Members $SAMACCName
@@ -464,7 +470,7 @@ $window.FindName("btnCreateUserAction").Add_Click({
     }
 })
 
-#Import csv-button for creating users.. Probably broken atm. Not tested. At all. Basically a placeholder atm.
+# Import csv-button for creating users.. Probably broken atm. Old script thrown in.
 $window.FindName("btnImportAction").Add_Click({
 
     $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
@@ -473,7 +479,7 @@ $window.FindName("btnImportAction").Add_Click({
     $openFileDialog.Filter = "CSV Files (*.csv)|*.csv"
     $openFileDialog.FilterIndex = 2
     
-    #Check whether a file was chosen or not
+    # Check whether a file was chosen or not
     if ($openFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         $selectedFile = $openFileDialog.FileName
         [System.Windows.Forms.MessageBox]::Show("User(s) have been created!")
@@ -491,7 +497,7 @@ $window.FindName("btnImportAction").Add_Click({
 
 })
 
-#Button that creates a Security Group
+# Button that creates a Security Group
 $window.FindName("btnCreateSecGroupAction").Add_Click({
     $groupName = $window.FindName("txtSecGroupName").Text
     $selectedScope = $window.FindName("cbGroupScope").SelectedItem.Content
@@ -502,7 +508,7 @@ $window.FindName("btnCreateSecGroupAction").Add_Click({
         return
     }
 
-    #Converts the values in combobox to AD-values.
+    # Converts the values in combobox to AD-values.
     $scopeMapping = @{
         "Global"       = "Global"
         "Universal"    = "Universal"
@@ -510,7 +516,7 @@ $window.FindName("btnCreateSecGroupAction").Add_Click({
     }
     $adScope = $scopeMapping[$selectedScope]
 
-    #Convert the selected OU to Distinguished Name
+    # Convert the selected OU to Distinguished Name
     $selectedOU = $data | Where-Object { $_.Name -eq $selectedOU } | Select-Object -ExpandProperty DistinguishedName
 
     if (-not $selectedOU) {
@@ -518,7 +524,7 @@ $window.FindName("btnCreateSecGroupAction").Add_Click({
         return
     }
 
-    #Creates the Security Group
+    # Creates the Security Group
     try {
         New-ADGroup -Name $groupName -SamAccountName $groupName -GroupCategory Security -GroupScope $adScope -DisplayName $groupName -Path $selectedOU
         [System.Windows.MessageBox]::Show("Security group '$groupName' created successfully.", "Success")
@@ -528,19 +534,19 @@ $window.FindName("btnCreateSecGroupAction").Add_Click({
 
 })
 
-#Button that create Computer Object
+# Button that create Computer Object
 $window.FindName("btnCreateComputerAction").Add_Click({
 
     $compName = $window.FindName("txtCompName").Text
     $selectedCompOU = $cbCompObjOU.SelectedItem
     
-    #Check if the form inputs are filled
+    # Check if the form inputs are filled
     if (-not $compName -or -not $selectedCompOU) {
         Write-Host "Error: All fields must be filled out." -ForegroundColor Red
         exit
     }
     
-    #Convert the selected OU to its Distinguished Name(copy-paste from user/secgroup)
+    # Convert the selected OU to its Distinguished Name(copy-paste from user/secgroup)
     $selectedCompOU = $data | Where-Object { $_.Name -eq $cbCompObjOU.SelectedItem } | Select-Object -ExpandProperty DistinguishedName
     
     if (-not $selectedCompOU) {
@@ -549,7 +555,7 @@ $window.FindName("btnCreateComputerAction").Add_Click({
         exit
     }
     
-    #Creation of the computer object
+    # Creation of the computer object
     try {
         New-ADComputer -Name $compName -SamAccountName $compName -DisplayName $compName -Path $selectedCompOU
         Write-Host "Computer Object '$compName' created successfully in OU '$selectedCompOU'."
@@ -561,19 +567,19 @@ $window.FindName("btnCreateComputerAction").Add_Click({
 
 })
 
-#Button that creates Organizational Unit
+# Button that creates Organizational Unit
 $window.FindName("btnCreateOrgUnitAction").Add_Click({
 
     $orgUnitName = $window.FindName("txtOrgUnitName").Text
     $selectedOrgUnitOU = $cbOrgUnitOU.SelectedItem
     
-    #Check if the form inputs are filled
+    # Check if the form inputs are filled
     if (-not $orgUnitName -or -not $selectedOrgUnitOU) {
         Write-Host "Error: All fields must be filled out." -ForegroundColor Red
         exit
     }
     
-    #Convert the selected OU to its Distinguished Name(copy-paste from user/secgroup)
+    # Convert the selected OU to its Distinguished Name(copy-paste from user/secgroup)
     $selectedOrgUnitOU = $data | Where-Object { $_.Name -eq $cbOrgUnitOU.SelectedItem } | Select-Object -ExpandProperty DistinguishedName
     
     if (-not $selectedOrgUnitOU) {
@@ -624,9 +630,4 @@ $xamlHierarchicalInput = Join-Path -Path $PSScriptRoot -ChildPath "GUI\OU_hierar
     }
 })
 
-
-#@TO-DO: Make .csv-import functional
-#@TO-DO: Is it even possible to add printer objects and map them..?
-
 $window.ShowDialog()
-
