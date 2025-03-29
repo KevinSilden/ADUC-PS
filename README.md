@@ -4,7 +4,7 @@ v0.10 is the newest iteration, GUI should scale according to screen size. No ani
 With this tool you will be able to:
 
 - Create a single user and place it in an existing security group and OU, firstname.lastname@domain.com will be the username. Not customizeable at the moment.
-- Import user(s) using a .csv-file(Not tested, probably broken, going to include a template when I get around to it and fix this function)
+- Import user(s) using a .csv-file(Not tested, probably broken, just and older script thrown in there)
 - Create a Security Group, set the scope of it, and choose which OU to place it in.
 - Create a Computer Object and which OU it should reside in.
 - Create an Organizational Unit, and decide which existing OU it throw it into, including "root".
