@@ -1,0 +1,145 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ADUC-PS v.0.10" 
+        ResizeMode="CanResize" 
+        Background="Black" 
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.8*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Top left panel(title) -->
+        <Grid Grid.Row="0" Grid.Column="0" Background="#131111">
+            <TextBlock x:Name="TopLeftTitlePanel" Text="ADUC-PS v.0.10" FontWeight="Bold" Foreground="White" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="24"/>
+        </Grid>
+
+        <!-- Bottom left panel buttons -->
+        <Grid Grid.Row="1" Grid.Column="0" Background="#131111">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button Name="btnCreateUser" Content="Create a User" Margin="5" Grid.Row="0"/>
+            <Button Name="btnImportCSV" Content="Import user(s) with .csv" Margin="5" Grid.Row="1"/>
+            <Button Name="btnCreateSecGroup" Content="Create a Security Group" Margin="5" Grid.Row="2"/>
+            <Button Name="btnCreateCompObject" Content="Create a Computer Object" Margin="5" Grid.Row="3"/>
+            <Button Name="btnCreateOrgUnit" Content="Create an Organizational Unit" Margin="5" Grid.Row="4"/>
+            <TextBlock Text=" " FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"
+                       Margin="0,10" Foreground="White" Grid.Row="5"/>
+            <Button Name="btnDisplayOUStructure" Content="Show OU structure" Margin="5" Grid.Row="6"/>
+            <TextBlock Grid.Column="0" Text="silden.it" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"
+                       Margin="0,10" Foreground="White" Grid.Row="7"/>
+        </Grid>
+
+        <!-- Top right panel -->
+        <Grid Grid.Row="0" Grid.Column="1" Background="#131111">
+            <TextBlock x:Name="topRightUserTitlePanel" Text="Create a user" FontWeight="Bold" Foreground="White" 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                FontSize="24" Visibility="Collapsed"/>
+            <TextBlock x:Name="topRightCsvImportTitle" Text="Import User(s) with .csv" FontWeight="Bold" Foreground="White" 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                FontSize="24" Visibility="Collapsed"/>
+            <TextBlock x:Name="topRightSecGroupTitle" Text="Create a Security Group" FontWeight="Bold" Foreground="White" 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                FontSize="24" Visibility="Collapsed"/>
+            <TextBlock x:Name="topRightCompObjectTitle" Text="Create a Computer Object" FontWeight="Bold" Foreground="White" 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                FontSize="24" Visibility="Collapsed"/>
+            <TextBlock x:Name="topRightOrgUnitTitle" Text="Create an Organizational Unit" FontWeight="Bold" Foreground="White" 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                FontSize="24" Visibility="Collapsed"/>
+        </Grid>
+
+        <!-- Bottom right panel with scaling -->
+        <Grid Grid.Row="1" Grid.Column="1" Background="#131111">
+            <ScrollViewer x:Name="bottomRightUserCreationPanel" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+            <UniformGrid Columns="1" Margin="10">
+
+                    <!-- User Creation Panel -->
+                    <TextBlock Text="Users first name:" FontWeight="Bold" Foreground="White" FontSize="18" VerticalAlignment="Center"/>
+                    <TextBox Name="txtUserFirstName" Margin="5" VerticalAlignment="Stretch" FontSize="18"/>
+                    <TextBlock Text="Users last name:" FontWeight="Bold" Foreground="White" FontSize="18" VerticalAlignment="Center"/>
+                    <TextBox Name="txtUserLastName" Margin="5" VerticalAlignment="Stretch" FontSize="18"/>
+                    <TextBlock Text="Domain (change if necessary):" FontWeight="Bold" Foreground="White" FontSize="18" VerticalAlignment="Center"/>
+                    <TextBox Name="txtUPN" Margin="5" VerticalAlignment="Stretch" FontSize="18"/>
+                    <TextBlock Text="User's password for first logon:" FontWeight="Bold" Foreground="White" FontSize="18" VerticalAlignment="Center"/>
+                    <TextBox Name="txtPassword" Margin="5" VerticalAlignment="Stretch" FontSize="18"/>
+                    <TextBlock Text="Select user's OU:" FontWeight="Bold" Foreground="White" FontSize="18" VerticalAlignment="Center"/>
+                    <ComboBox Name="cbUserOU" Margin="5" VerticalAlignment="Stretch" BorderBrush="Black"/>
+                    <TextBlock Text="Select User's Security Group:" FontWeight="Bold" Foreground="White" FontSize="18" VerticalAlignment="Center"/>
+                    <ComboBox Name="cbUserSecGroup" Margin="5" VerticalAlignment="Stretch" BorderBrush="Black"/>
+                    <Button Name="btnCreateUserAction" Content="Create user" Margin="5" Height="40" VerticalAlignment="Stretch"/>
+                </UniformGrid>
+            </ScrollViewer>
+
+            <!-- "Landing page" -->
+            <StackPanel x:Name="bottomRightLandingPagePanel" Visibility="Collapsed" Grid.Row="1" Margin="10">
+                <TextBlock Text="This tool aims to recreate ADUC using Powershell." FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <TextBlock Text="" FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <TextBlock Text="" FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <TextBlock Text="oh, look, button" FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <TextBlock Text="|" FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <TextBlock Text="|" FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <TextBlock Text="|" FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <TextBlock Text="V" FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <Button Name="btnGit" Content="git" Margin="5" Height="40" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <!-- CSV Import Panel -->
+            <StackPanel x:Name="bottomRightCsvImportPanel" Visibility="Collapsed" Grid.Row="1" Margin="10">
+                <TextBlock Text="Import Users from CSV" FontWeight="Bold" Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
+                <Button Name="btnImportAction" Content="Import Users" Margin="5" Height="40" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+            
+            <!-- Security Group Panel -->
+            <StackPanel x:Name="bottomRightSecGroupPanel" Visibility="Collapsed" Grid.Row="1">
+                <TextBlock Text="Security Group's name:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <TextBox Name="txtSecGroupName" Margin="5" FontSize="18"/>
+                <TextBlock Text="Select OU:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <ComboBox Name="cbSecGroupOU" Margin="5" BorderBrush="Black"/>
+                <TextBlock Text="Select Group Scope:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <ComboBox Name="cbGroupScope" Margin="5" BorderBrush="Black">
+                    <ComboBoxItem Content="Global"/>
+                    <ComboBoxItem Content="Universal"/>
+                    <ComboBoxItem Content="Domain Local"/>
+                </ComboBox>
+                <Button Name="btnCreateSecGroupAction" Content="Create Security Group" Margin="5"/>
+            </StackPanel>
+
+            <!-- Computer Object Panel -->
+            <StackPanel x:Name="bottomRightCompObjectPanel" Visibility="Collapsed" Grid.Row="1">
+                <TextBlock Text="Computer Object's name:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <TextBox Name="txtCompName" Margin="5" FontSize="18"/>
+                <TextBlock Text="Select OU:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <ComboBox Name="cbCompObjOU" Margin="5" Grid.Row="2" BorderBrush="Black"/>
+                <Button Name="btnCreateComputerAction" Content="Create Computer Object" Margin="5"/>
+            </StackPanel>
+
+                        <!-- Organizational Unit Panel -->
+            <StackPanel x:Name="bottomRightOrgUnitPanel" Visibility="Collapsed" Grid.Row="1">
+                <TextBlock Text="Organizational Units name:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <TextBox Name="txtOrgUnitName" Margin="5" FontSize="18"/>
+                <TextBlock Text="Select existing OU:" FontWeight="Bold" Foreground="White" FontSize="24"/>
+                <ComboBox Name="cbOrgUnitOU" Margin="5" Grid.Row="2" BorderBrush="Black"/>
+                <Button Name="btnCreateOrgUnitAction" Content="Create Organizational Unit" Margin="5"/>
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</Window>
