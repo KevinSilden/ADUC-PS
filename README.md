@@ -1,6 +1,6 @@
 This project is me trying to recreate ADUC using PowerShell and Windows Presentation Framework and Windows Forms - since there is no ADUC through RSAT on ARM(atm).
 
-v0.10 is the newest iteration, GUI should scale according to screen size. No animation atm.
+v0.7 is the newest iteration, GUI should scale according to screen size. No animation atm.
 With this tool you will be able to:
 
 - Create a single user and place it in an existing security group and OU, firstname.lastname@domain.com will be the username. Not customizeable at the moment.
